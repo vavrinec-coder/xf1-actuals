@@ -1,6 +1,3 @@
-<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT License. -->
-<!-- This file shows how to design a first-run page that provides a welcome screen to the user about the features of the add-in. -->
-
 <!DOCTYPE html>
 <html>
 
@@ -8,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Contoso Task Pane Add-in</title>
+    <title>XF1 Actuals Add-in</title>
 
     <!-- Office JavaScript API -->
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
@@ -20,35 +17,65 @@
     <link href="taskpane.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body class="ms-font-m ms-welcome ms-Fabric">
-    <header class="ms-welcome__header ms-bgColor-neutralLighter">
-        <img width="90" height="90" src="../../assets/logo-filled.png" alt="Contoso" title="Contoso" />
-        <h1 class="ms-font-su">Welcome</h1>
-    </header>
-    <section id="sideload-msg" class="ms-welcome__main">
-        <h2 class="ms-font-xl">Please <a target="_blank" href="https://learn.microsoft.com/office/dev/add-ins/testing/test-debug-office-add-ins#sideload-an-office-add-in-for-testing">sideload</a> your add-in to see app body.</h2>
+<body class="ms-font-m ms-Fabric">
+    <section id="sideload-msg" class="loading-state">
+        <h2 class="ms-font-xl">
+            Please
+            <a target="_blank" href="https://learn.microsoft.com/office/dev/add-ins/testing/test-debug-office-add-ins#sideload-an-office-add-in-for-testing">sideload</a>
+            your add-in to continue.
+        </h2>
     </section>
-    <main id="app-body" class="ms-welcome__main" style="display: none;">
-        <h2 class="ms-font-xl"> Discover what Office Add-ins can do for you today! </h2>
-        <ul class="ms-List ms-welcome__features">
-            <li class="ms-ListItem">
-                <i class="ms-Icon ms-Icon--Ribbon ms-font-xl"></i>
-                <span class="ms-font-m">Achieve more with Office integration</span>
-            </li>
-            <li class="ms-ListItem">
-                <i class="ms-Icon ms-Icon--Unlock ms-font-xl"></i>
-                <span class="ms-font-m">Unlock features and functionality</span>
-            </li>
-            <li class="ms-ListItem">
-                <i class="ms-Icon ms-Icon--Design ms-font-xl"></i>
-                <span class="ms-font-m">Create and visualize like a pro</span>
-            </li>
-        </ul>
-        <p class="ms-font-l">Modify the source files, then click <b>Run</b>.</p>
-        <div role="button" id="run" class="ms-welcome__action ms-Button ms-Button--hero ms-font-xl">
-            <span class="ms-Button-label">Run</span>
-        </div>
-        <p><label id="item-subject"></label></p>
+    <main id="app-body" class="app-shell" style="display: none;">
+        <header class="app-header">
+            <img width="44" height="44" src="../../assets/logo-filled.png" alt="XF1" />
+            <div>
+                <h1>XF1 Actuals</h1>
+                <p>Consolidate from multiple files</p>
+            </div>
+        </header>
+
+        <section class="panel">
+            <button id="toggle-consolidate-btn" class="btn btn-primary" type="button">
+                Consolidate from multiple files
+            </button>
+        </section>
+
+        <section id="consolidate-panel" class="panel hidden">
+            <div class="row">
+                <button id="add-source-btn" class="btn btn-secondary" type="button">+ Add source file</button>
+                <span id="source-count-label" class="meta-text"></span>
+            </div>
+
+            <div id="sources-container" class="sources-list"></div>
+
+            <div class="panel panel-soft">
+                <h3>Output</h3>
+                <label class="field-label" for="output-file-name">Output file name</label>
+                <input id="output-file-name" class="text-input" type="text" value="consolidated-actuals.xlsx" />
+                <div class="row">
+                    <button id="browse-output-btn" class="btn btn-secondary" type="button">Browse save location</button>
+                    <span id="output-location-label" class="meta-text">No save location selected yet.</span>
+                </div>
+            </div>
+
+            <div class="panel panel-soft">
+                <h3>Configuration</h3>
+                <div class="row">
+                    <button id="save-config-btn" class="btn btn-secondary" type="button">Save config</button>
+                    <button id="load-config-btn" class="btn btn-secondary" type="button">Load config</button>
+                    <input id="load-config-input" type="file" accept=".json,.xf1config.json" hidden />
+                </div>
+                <p class="meta-text">
+                    Config stores mappings and path hints. On load, reselect source files for security reasons.
+                </p>
+            </div>
+
+            <div class="row">
+                <button id="run-consolidation-btn" class="btn btn-success" type="button">Run consolidation</button>
+            </div>
+
+            <div id="status-message" class="status-message" role="status" aria-live="polite"></div>
+        </section>
     </main>
 </body>
 
